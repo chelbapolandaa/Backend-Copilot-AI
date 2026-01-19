@@ -16,8 +16,8 @@ const aiWrapper = new LLMWrapper({
   enabled: process.env.AI_ENABLED === 'true'
 });
 
-// Register Swagger for API documentation
-fastify.register(fastifySwagger, {
+// ==================== SWAGGER CONFIG ====================
+const swaggerOptions = {
   swagger: {
     info: {
       title: 'Backend Copilot AI',
@@ -39,18 +39,22 @@ fastify.register(fastifySwagger, {
       { name: 'Documentation', description: 'API documentation' }
     ]
   }
-});
+};
 
-// Register Swagger UI
-fastify.register(fastifySwaggerUi, {
+const swaggerUiOptions = {
   routePrefix: '/docs',
   uiConfig: {
     docExpansion: 'list',
     deepLinking: false
   }
-});
+};
 
-// Serve static files (for demo page)
+// ==================== REGISTER PLUGINS ====================
+// Register Swagger
+fastify.register(fastifySwagger, swaggerOptions as any);
+fastify.register(fastifySwaggerUi, swaggerUiOptions as any);
+
+// Serve static files
 fastify.register(fastifyStatic, {
   root: path.join(process.cwd(), 'public'),
   prefix: '/'
@@ -59,7 +63,25 @@ fastify.register(fastifyStatic, {
 // ==================== ROUTES ====================
 
 // Basic health check
-fastify.get('/health', async () => {
+fastify.get('/health', {
+  schema: {
+    description: 'Health check endpoint',
+    tags: ['Health'],
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          status: { type: 'string' },
+          service: { type: 'string' },
+          version: { type: 'string' },
+          features: { type: 'array', items: { type: 'string' } },
+          documentation: { type: 'string' },
+          demo: { type: 'string' }
+        }
+      }
+    }
+  }
+}, async () => {
   return { 
     status: 'ok', 
     service: 'backend-copilot-ai',
@@ -76,7 +98,22 @@ fastify.get('/health', async () => {
 });
 
 // Demo page redirect
-fastify.get('/demo', async () => {
+fastify.get('/demo', {
+  schema: {
+    description: 'Demo page redirect',
+    tags: ['Documentation'],
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          message: { type: 'string' },
+          demoUrl: { type: 'string' },
+          apiDocs: { type: 'string' }
+        }
+      }
+    }
+  }
+}, async () => {
   return { 
     message: 'Visit /index.html for the demo interface',
     demoUrl: 'http://localhost:3000/index.html',
@@ -85,7 +122,31 @@ fastify.get('/demo', async () => {
 });
 
 // Endpoint 1: Generate OpenAPI spec
-fastify.post<{ Body: { code: string } }>('/api/generate/openapi', async (request, reply) => {
+fastify.post<{ Body: { code: string } }>('/api/generate/openapi', {
+  schema: {
+    description: 'Generate OpenAPI specification from code',
+    tags: ['Analysis'],
+    body: {
+      type: 'object',
+      required: ['code'],
+      properties: {
+        code: { type: 'string' }
+      }
+    },
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          method: { type: 'string', enum: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] },
+          path: { type: 'string' },
+          description: { type: 'string' },
+          parameters: { type: 'array' },
+          responses: { type: 'object' }
+        }
+      }
+    }
+  }
+}, async (request, reply) => {
   try {
     const { generateOpenAPI } = await import('./generators/openapi-generator');
     const { code } = request.body;
@@ -100,7 +161,42 @@ fastify.post<{ Body: { code: string } }>('/api/generate/openapi', async (request
 });
 
 // Endpoint 2: Analyze controller
-fastify.post<{ Body: { code: string } }>('/api/analyze/controller', async (request, reply) => {
+fastify.post<{ Body: { code: string } }>('/api/analyze/controller', {
+  schema: {
+    description: 'Analyze controller code for complexity and issues',
+    tags: ['Analysis'],
+    body: {
+      type: 'object',
+      required: ['code'],
+      properties: {
+        code: { type: 'string' }
+      }
+    },
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          complexity: {
+            type: 'object',
+            properties: {
+              score: { type: 'number' },
+              level: { type: 'string', enum: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'] },
+              issues: { type: 'array', items: { type: 'string' } }
+            }
+          },
+          validations: {
+            type: 'object',
+            properties: {
+              missing: { type: 'array', items: { type: 'string' } },
+              present: { type: 'array', items: { type: 'string' } }
+            }
+          },
+          suggestions: { type: 'array', items: { type: 'string' } }
+        }
+      }
+    }
+  }
+}, async (request, reply) => {
   try {
     const { analyzeController } = await import('./analyzers/controller-analyzer');
     const { code } = request.body;
@@ -115,7 +211,50 @@ fastify.post<{ Body: { code: string } }>('/api/analyze/controller', async (reque
 });
 
 // Endpoint 3: Validate auth flow
-fastify.post<{ Body: { config: any } }>('/api/validate/auth', async (request, reply) => {
+fastify.post<{ Body: { config: any } }>('/api/validate/auth', {
+  schema: {
+    description: 'Validate authentication and authorization flow',
+    tags: ['Analysis'],
+    body: {
+      type: 'object',
+      required: ['config'],
+      properties: {
+        config: { type: 'object' }
+      }
+    },
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          leaks: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                route: { type: 'string' },
+                method: { type: 'string' },
+                severity: { type: 'string', enum: ['HIGH', 'MEDIUM', 'LOW'] }
+              }
+            }
+          },
+          mismatches: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                route: { type: 'string' },
+                method: { type: 'string' },
+                requiredRoles: { type: 'array', items: { type: 'string' } },
+                assignedRoles: { type: 'array', items: { type: 'string' } }
+              }
+            }
+          },
+          suggestions: { type: 'array', items: { type: 'string' } }
+        }
+      }
+    }
+  }
+}, async (request, reply) => {
   try {
     const { config } = request.body;
     const validator = new AuthValidator();
@@ -130,7 +269,32 @@ fastify.post<{ Body: { config: any } }>('/api/validate/auth', async (request, re
 });
 
 // Endpoint 4: AI-powered analysis
-fastify.post<{ Body: { code: string } }>('/api/ai/analyze', async (request, reply) => {
+fastify.post<{ Body: { code: string } }>('/api/ai/analyze', {
+  schema: {
+    description: 'AI-powered code analysis with fallback to rule-based',
+    tags: ['AI'],
+    body: {
+      type: 'object',
+      required: ['code'],
+      properties: {
+        code: { type: 'string' }
+      }
+    },
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          source: { type: 'string' },
+          timestamp: { type: 'string' },
+          complexity: { type: 'number' },
+          issues: { type: 'array', items: { type: 'string' } },
+          suggestions: { type: 'array', items: { type: 'string' } },
+          securityConcerns: { type: 'array', items: { type: 'string' } }
+        }
+      }
+    }
+  }
+}, async (request, reply) => {
   try {
     const { code } = request.body;
     const result = await aiWrapper.analyzeController(code);
@@ -162,7 +326,33 @@ fastify.post<{ Body: { code: string } }>('/api/ai/analyze', async (request, repl
 });
 
 // Endpoint 5: AI OpenAPI generation
-fastify.post<{ Body: { code: string } }>('/api/ai/openapi', async (request, reply) => {
+fastify.post<{ Body: { code: string } }>('/api/ai/openapi', {
+  schema: {
+    description: 'AI-powered OpenAPI generation',
+    tags: ['AI'],
+    body: {
+      type: 'object',
+      required: ['code'],
+      properties: {
+        code: { type: 'string' }
+      }
+    },
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          source: { type: 'string' },
+          timestamp: { type: 'string' },
+          method: { type: 'string' },
+          path: { type: 'string' },
+          summary: { type: 'string' },
+          parameters: { type: 'array' },
+          responses: { type: 'object' }
+        }
+      }
+    }
+  }
+}, async (request, reply) => {
   try {
     const { code } = request.body;
     const result = await aiWrapper.generateOpenAPI(code);
@@ -194,7 +384,31 @@ fastify.post<{ Body: { code: string } }>('/api/ai/openapi', async (request, repl
 });
 
 // Endpoint 6: AI auth validation
-fastify.post<{ Body: { code: string } }>('/api/ai/auth', async (request, reply) => {
+fastify.post<{ Body: { code: string } }>('/api/ai/auth', {
+  schema: {
+    description: 'AI-powered authentication flow validation',
+    tags: ['AI'],
+    body: {
+      type: 'object',
+      required: ['code'],
+      properties: {
+        code: { type: 'string' }
+      }
+    },
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          source: { type: 'string' },
+          timestamp: { type: 'string' },
+          vulnerabilities: { type: 'array', items: { type: 'string' } },
+          recommendations: { type: 'array', items: { type: 'string' } },
+          riskLevel: { type: 'string', enum: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL', 'UNKNOWN'] }
+        }
+      }
+    }
+  }
+}, async (request, reply) => {
   try {
     const { code } = request.body;
     const result = await aiWrapper.validateAuthFlow(code);
@@ -224,7 +438,6 @@ fastify.post<{ Body: { code: string } }>('/api/ai/auth', async (request, reply) 
 });
 
 // ==================== START SERVER ====================
-
 const start = async () => {
   try {
     await fastify.ready();
