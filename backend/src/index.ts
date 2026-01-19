@@ -94,6 +94,8 @@ async function performRuleBasedAnalysis(code: string) {
   return analyzeController(code);
 }
 
+
+
 // Start server
 const start = async () => {
   try {
