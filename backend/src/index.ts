@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import { AuthValidator } from './analyzers/auth-validator';
 
 const fastify = Fastify({
   logger: true
@@ -40,6 +41,20 @@ fastify.post<{ Body: { code: string } }>('/api/analyze/controller', async (reque
   } catch (error: any) {
     reply.status(500).send({ 
       error: 'Analysis failed',
+      message: error.message || 'Unknown error'
+    });
+  }
+});
+
+fastify.post<{ Body: { config: any } }>('/api/validate/auth', async (request, reply) => {
+  try {
+    const { config } = request.body;
+    const validator = new AuthValidator();
+    const result = validator.validate(config);
+    return result;
+  } catch (error: any) {
+    reply.status(500).send({ 
+      error: 'Auth validation failed',
       message: error.message || 'Unknown error'
     });
   }
