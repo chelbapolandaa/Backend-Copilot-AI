@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.npm
+.yarn
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+*.log
+logs
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional eslint cache
+.eslintcache
+
+# Temp
+tmp/
+temp/
+
+# API Keys
+.openai
+.env.local
+
+# Test outputs
+test-results/
