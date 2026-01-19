@@ -1,8 +1,14 @@
 import Fastify from 'fastify';
 import { AuthValidator } from './analyzers/auth-validator';
+import { LLMWrapper } from './ai/llm-wrapper';
 
 const fastify = Fastify({
   logger: true
+});
+
+const aiWrapper = new LLMWrapper({
+  apiKey: process.env.OPENAI_API_KEY,
+  model: 'gpt-4-turbo-preview'
 });
 
 // Basic health check
@@ -59,6 +65,34 @@ fastify.post<{ Body: { config: any } }>('/api/validate/auth', async (request, re
     });
   }
 });
+
+fastify.post<{ Body: { code: string } }>('/api/ai/analyze', async (request, reply) => {
+  try {
+    const { code } = request.body;
+    const result = await aiWrapper.analyzeController(code);
+    return { 
+      success: true, 
+      analysis: result,
+      note: 'AI-powered analysis'
+    };
+  } catch (error: any) {
+    if (error.message.includes('API key')) {
+      return {
+        success: false,
+        error: 'AI service unavailable',
+        message: 'Please set OPENAI_API_KEY environment variable',
+        fallback: await performRuleBasedAnalysis(request.body.code)
+      };
+    }
+    reply.status(500).send({ error: 'AI analysis failed', message: error.message });
+  }
+});
+
+async function performRuleBasedAnalysis(code: string) {
+  // Fallback to rule-based analysis
+  const { analyzeController } = await import('./analyzers/controller-analyzer');
+  return analyzeController(code);
+}
 
 // Start server
 const start = async () => {
