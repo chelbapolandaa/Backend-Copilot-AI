@@ -7,8 +7,11 @@ import { AuthValidator } from './analyzers/auth-validator';
 import { LLMWrapper } from './ai/llm-wrapper';
 
 const fastify = Fastify({
-  logger: true
+  logger: true,
+  bodyLimit: 1048576, // 1MB
+  disableRequestLogging: true
 });
+
 
 // Initialize AI wrapper
 const aiWrapper = new LLMWrapper({
@@ -381,6 +384,10 @@ fastify.post<{ Body: { code: string } }>('/api/ai/openapi', {
       message: error.message || 'Unknown error'
     });
   }
+});
+
+fastify.get('/api/test', async () => {
+  return { message: 'API is working' };
 });
 
 // Endpoint 6: AI auth validation

@@ -1,0 +1,1 @@
+{"complexity":{"score":0,"level":"LOW","issues":["No input validation detected"]},"validations":{"missing":["input-validation","error-handling","type-checking"],"present":["basic-structure"]},"suggestions":["Consider adding input validation with Zod","Add proper error handling with try-catch","Extract business logic to separate functions"]}
