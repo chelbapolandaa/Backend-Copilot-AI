@@ -76,7 +76,6 @@ export class LLMWrapper {
   }
 
   async generateOpenAPI(code: string) {
-    // FIX: Zod record butuh 2 parameter
     const OpenAPISchema = z.object({
       method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']),
       path: z.string(),
