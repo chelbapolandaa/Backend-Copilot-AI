@@ -14,7 +14,7 @@ export class JsonValidator {
     // Remove any potentially dangerous content
     const safeOutput = { ...output };
     
-    // Remove any __proto__ or constructor properties
+    
     if (safeOutput.__proto__) delete safeOutput.__proto__;
     if (safeOutput.constructor) delete safeOutput.constructor;
     
