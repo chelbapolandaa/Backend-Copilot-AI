@@ -19,50 +19,6 @@ const aiWrapper = new LLMWrapper({
   enabled: process.env.AI_ENABLED === 'true'
 });
 
-// ==================== SWAGGER CONFIG ====================
-const swaggerOptions = {
-  swagger: {
-    info: {
-      title: 'Backend Copilot AI',
-      description: 'AI-powered backend analysis and code review tool',
-      version: '1.0.0'
-    },
-    externalDocs: {
-      url: 'https://github.com/chelbapolandaa/Backend-Copilot-AI',
-      description: 'GitHub Repository'
-    },
-    host: 'localhost:3000',
-    schemes: ['http'],
-    consumes: ['application/json'],
-    produces: ['application/json'],
-    tags: [
-      { name: 'Analysis', description: 'Code analysis endpoints' },
-      { name: 'AI', description: 'AI-powered analysis' },
-      { name: 'Health', description: 'Health checks' },
-      { name: 'Documentation', description: 'API documentation' }
-    ]
-  }
-};
-
-const swaggerUiOptions = {
-  routePrefix: '/docs',
-  uiConfig: {
-    docExpansion: 'list',
-    deepLinking: false
-  }
-};
-
-// ==================== REGISTER PLUGINS ====================
-// Register Swagger
-fastify.register(fastifySwagger, swaggerOptions as any);
-fastify.register(fastifySwaggerUi, swaggerUiOptions as any);
-
-// Serve static files
-fastify.register(fastifyStatic, {
-  root: path.join(process.cwd(), 'public'),
-  prefix: '/'
-});
-
 // ==================== ROUTES ====================
 
 // Basic health check
@@ -443,6 +399,52 @@ fastify.post<{ Body: { code: string } }>('/api/ai/auth', {
     });
   }
 });
+
+// ==================== SWAGGER CONFIG ====================
+const swaggerOptions = {
+  swagger: {
+    info: {
+      title: 'Backend Copilot AI',
+      description: 'AI-powered backend analysis and code review tool',
+      version: '1.0.0'
+    },
+    externalDocs: {
+      url: 'https://github.com/chelbapolandaa/Backend-Copilot-AI',
+      description: 'GitHub Repository'
+    },
+    host: 'localhost:3000',
+    schemes: ['http'],
+    consumes: ['application/json'],
+    produces: ['application/json'],
+    tags: [
+      { name: 'Analysis', description: 'Code analysis endpoints' },
+      { name: 'AI', description: 'AI-powered analysis' },
+      { name: 'Health', description: 'Health checks' },
+      { name: 'Documentation', description: 'API documentation' }
+    ]
+  }
+};
+
+const swaggerUiOptions = {
+  routePrefix: '/docs',
+  uiConfig: {
+    docExpansion: 'list',
+    deepLinking: false
+  }
+};
+
+// ==================== REGISTER PLUGINS ====================
+// static files
+fastify.register(fastifyStatic, {
+  root: path.join(process.cwd(), 'public'),
+  prefix: '/'
+});
+
+// Register Swagger
+fastify.register(fastifySwagger, swaggerOptions as any);
+fastify.register(fastifySwaggerUi, swaggerUiOptions as any);
+
+
 
 // ==================== START SERVER ====================
 const start = async () => {
