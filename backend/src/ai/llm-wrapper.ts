@@ -83,7 +83,7 @@ export class LLMWrapper {
       description: z.string().optional(),
       parameters: z.array(z.any()).optional(),
       requestBody: z.any().optional(),
-      responses: z.record(z.string(), z.any()) // FIXED: 2 parameters
+      responses: z.record(z.string(), z.any())
     });
 
     const prompt = `Analyze this backend code and generate OpenAPI specification in JSON format.
