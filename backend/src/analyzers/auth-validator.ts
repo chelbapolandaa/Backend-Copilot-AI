@@ -42,7 +42,7 @@ export class AuthValidator {
       }
     });
 
-    // Check role assignments
+    // Check role assignment
     config.routes.forEach(route => {
       if (route.roles && route.middleware) {
         route.middleware.forEach(mw => {
