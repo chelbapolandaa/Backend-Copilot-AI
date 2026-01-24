@@ -32,7 +32,6 @@ export class AuthValidator {
     const mismatches: AuthValidationResult['mismatches'] = [];
     const suggestions: string[] = [];
 
-    // Check for unprotected routes
     config.routes.forEach(route => {
       if (!route.middleware || route.middleware.length === 0) {
         leaks.push({
