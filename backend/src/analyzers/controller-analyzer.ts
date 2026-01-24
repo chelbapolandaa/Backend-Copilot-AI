@@ -38,7 +38,6 @@ export async function analyzeController(code: string): Promise<AnalysisResult> {
 }
 
 function performBasicAnalysis(code: string): any {
-  // Temporary analysis
   const lines = code.split('\n').length;
   const complexity = Math.min(Math.floor(lines / 10), 10);
   
