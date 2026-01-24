@@ -65,7 +65,6 @@ export class AuthValidator {
       }
     });
 
-    // Generate suggestions
     if (leaks.length > 0) {
       suggestions.push('Add authentication middleware to unprotected routes');
     }
