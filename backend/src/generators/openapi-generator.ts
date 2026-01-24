@@ -42,7 +42,7 @@ export async function generateOpenAPI(code: string): Promise<OpenAPIResponse> {
   // Step 2: Basic parsing (sementara dummy, nanti pakai AI)
   const basicSpec = parseBasicInfo(code);
   
-  // Step 3: Validasi dengan schema
+  // Step 3: Validasi dengan schemaa
   return OpenAPIResponseSchema.parse(basicSpec);
 }
 
