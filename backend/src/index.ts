@@ -80,7 +80,7 @@ fastify.get('/demo', {
   };
 });
 
-// Endpoint 1: Generate OpenAPI spec
+// EndPoint 1 : Generate OpenAPI spec
 fastify.post<{ Body: { code: string } }>('/api/generate/openapi', {
   schema: {
     description: 'Generate OpenAPI specification from code',
