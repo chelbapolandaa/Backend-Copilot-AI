@@ -227,7 +227,7 @@ fastify.post<{ Body: { config: any } }>('/api/validate/auth', {
   }
 });
 
-// Endpoint 4: AI-powered analysis
+// AI-powered analysis
 fastify.post<{ Body: { code: string } }>('/api/ai/analyze', {
   schema: {
     description: 'AI-powered code analysis with fallback to rule-based',
