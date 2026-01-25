@@ -346,7 +346,7 @@ fastify.get('/api/test', async () => {
   return { message: 'API is working' };
 });
 
-// Endpoint 6: AI auth validation
+// AI auth validation
 fastify.post<{ Body: { code: string } }>('/api/ai/auth', {
   schema: {
     description: 'AI-powered authentication flow validation',
