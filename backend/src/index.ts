@@ -284,7 +284,7 @@ fastify.post<{ Body: { code: string } }>('/api/ai/analyze', {
   }
 });
 
-// Endpoint 5: AI OpenAPI generation
+// AI OpenAPI generation
 fastify.post<{ Body: { code: string } }>('/api/ai/openapi', {
   schema: {
     description: 'AI-powered OpenAPI generation',
