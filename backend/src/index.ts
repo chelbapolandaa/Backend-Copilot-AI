@@ -169,7 +169,7 @@ fastify.post<{ Body: { code: string } }>('/api/analyze/controller', {
   }
 });
 
-// Endpoint 3: Validate auth flow
+// Validate auth flow
 fastify.post<{ Body: { config: any } }>('/api/validate/auth', {
   schema: {
     description: 'Validate authentication and authorization flow',
