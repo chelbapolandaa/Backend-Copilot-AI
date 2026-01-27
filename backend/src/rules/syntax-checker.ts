@@ -26,7 +26,6 @@ export function checkSyntax(code: string): SyntaxCheckResult {
     warnings.push(`Mismatched parentheses: ${openBrackets} opening vs ${closeBrackets} closing`);
   }
   
-  // Check for arrow functions (common in modern backend)
   if (!code.includes('=>') && !code.includes('function')) {
     warnings.push('No function definition found');
   }
