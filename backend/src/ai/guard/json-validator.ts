@@ -11,7 +11,6 @@ export class JsonValidator {
   }
 
   sanitizeOutput(output: any): any {
-    // Remove any potentially dangerous content
     const safeOutput = { ...output };
     
     
