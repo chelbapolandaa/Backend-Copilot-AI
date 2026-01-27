@@ -15,7 +15,6 @@ export function checkSyntax(code: string): SyntaxCheckResult {
     errors.push('Code is empty');
   }
   
-  // Check for obvious syntax issues
   if (code.includes('const') && !code.includes('=')) {
     warnings.push('Const declaration without assignment');
   }
