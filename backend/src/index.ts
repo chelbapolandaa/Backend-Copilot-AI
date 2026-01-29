@@ -323,7 +323,6 @@ fastify.post<{ Body: { code: string } }>('/api/ai/openapi', {
         ...result.data
       };
     } else {
-      // Fallback to rule-based generation
       const { generateOpenAPI } = await import('./generators/openapi-generator');
       const fallbackResult = await generateOpenAPI(code);
       
