@@ -19,7 +19,6 @@ export function checkSyntax(code: string): SyntaxCheckResult {
     warnings.push('Const declaration without assignment');
   }
   
-  // Check for unclosed brackets
   const openBrackets = (code.match(/\(/g) || []).length;
   const closeBrackets = (code.match(/\)/g) || []).length;
   if (openBrackets !== closeBrackets) {
