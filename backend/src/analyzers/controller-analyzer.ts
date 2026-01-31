@@ -33,7 +33,6 @@ export async function analyzeController(code: string): Promise<AnalysisResult> {
   // Step 2: Basic analysis
   const analysis = performBasicAnalysis(code);
   
-  // Step 3: Validate with schema
   return AnalysisResultSchema.parse(analysis);
 }
 
