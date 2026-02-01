@@ -24,7 +24,6 @@ export type AnalysisResult = z.infer<typeof AnalysisResultSchema>;
 export async function analyzeController(code: string): Promise<AnalysisResult> {
   console.log('🔍 Analyzing controller code...');
   
-  // Step 1: Syntax check
   const syntaxResult = checkSyntax(code);
   if (!syntaxResult.valid) {
     throw new Error(`Syntax error: ${syntaxResult.errors?.join(', ')}`);
