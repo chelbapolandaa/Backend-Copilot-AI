@@ -13,7 +13,6 @@ const fastify = Fastify({
 });
 
 
-// Initialize AI wrapper
 const aiWrapper = new LLMWrapper({
   apiKey: process.env.OPENAI_API_KEY,
   enabled: process.env.AI_ENABLED === 'true'
