@@ -47,7 +47,6 @@ export async function generateOpenAPI(code: string): Promise<OpenAPIResponse> {
 }
 
 function parseBasicInfo(code: string): any {
-  // Temporary basic parser
   const methodMatch = code.match(/(get|post|put|delete|patch)\s*\(/i);
   const pathMatch = code.match(/['"`]([^'"`]+)['"`]/);
   

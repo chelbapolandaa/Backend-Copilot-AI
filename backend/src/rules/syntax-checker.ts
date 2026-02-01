@@ -8,8 +8,6 @@ export function checkSyntax(code: string): SyntaxCheckResult {
   const errors: string[] = [];
   const warnings: string[] = [];
   
-  // Basic checks
-  
   // Check if code is empty
   if (!code.trim()) {
     errors.push('Code is empty');
